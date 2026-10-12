@@ -249,4 +249,77 @@ X_train_balanced, y_train_balanced = smote.fit_resample(X_train_scaled, y_train)
 
 print(f"Balanceamento SMOTE concluído. Novas dimensões de treino balanceado: {X_train_balanced.shape}")
 
+# ==============================================================================
+# FASE 5: MODELAGEM PREDITIVA (KNN E ÁRVORE DE DECISÃO)
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 5: TREINAMENTO E OTIMIZAÇÃO DE MODELOS ---")
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+
+# ------------------------------------------------------------------------------
+# 1. Configuração da Validação Cruzada e Otimização de Hiperparâmetros (GridSearchCV)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: O GridSearchCV realiza uma busca exaustiva em uma grade de 
+# hiperparâmetros combinada com validação cruzada (Cross-Validation), garantindo 
+# que os parâmetros escolhidos maximizem a capacidade de generalização do modelo 
+# e evitem o sobreajuste (overfitting).
+cv_estrategia = 5
+
+# ------------------------------------------------------------------------------
+# 2. Treinamento e Otimização do Modelo K-Nearest Neighbors (KNN)
+# ------------------------------------------------------------------------------
+# Lógica matemática: O KNN classifica instâncias com base na distância euclidiana 
+# entre os pontos no espaço de características padronizado. O parâmetro 'n_neighbors' 
+# define quantos vizinhos influenciam a decisão de falha mecânica.
+print("\nOtimizando hiperparâmetros para o modelo KNN...")
+param_grid_knn = {
+    'n_neighbors': [3, 5, 7, 9],
+    'weights': ['uniform', 'distance'],
+    'metric': ['euclidean', 'manhattan']
+}
+
+grid_knn = GridSearchCV(
+    estimator=KNeighborsClassifier(),
+    param_grid=param_grid_knn,
+    cv=cv_estrategia,
+    scoring='roc_auc',
+    n_jobs=-1
+)
+
+# Execução do .fit() estritamente sobre os dados de treino balanceados e escalonados
+grid_knn.fit(X_train_balanced, y_train_balanced)
+melhor_knn = grid_knn.best_estimator_
+
+print(f"Melhores parâmetros encontrados para o KNN: {grid_knn.best_params_}")
+
+# ------------------------------------------------------------------------------
+# 3. Treinamento e Otimização do Modelo Árvore de Decisão (Decision Tree)
+# ------------------------------------------------------------------------------
+# Lógica matemática: A Árvore de Decisão particiona o espaço de características 
+# de forma hierárquica maximizando o Ganho de Informação / Redução da Impureza de Gini. 
+# Limitamos a profundidade máxima ('max_depth') para prevenir overfitting.
+print("\nOtimizando hiperparâmetros para o modelo Árvore de Decisão...")
+param_grid_dt = {
+    'max_depth': [3, 5, 10, None],
+    'criterion': ['gini', 'entropy'],
+    'min_samples_split': [2, 5, 10]
+}
+
+grid_dt = GridSearchCV(
+    estimator=DecisionTreeClassifier(random_state=42),
+    param_grid=param_grid_dt,
+    cv=cv_estrategia,
+    scoring='roc_auc',
+    n_jobs=-1
+)
+
+# Execução do .fit() estritamente sobre os dados de treino balanceados
+grid_dt.fit(X_train_balanced, y_train_balanced)
+melhor_dt = grid_dt.best_estimator_
+
+print(f"Melhores parâmetros encontrados para a Árvore de Decisão: {grid_dt.best_params_}")
+print("\nFase 5 concluída com sucesso: Modelos KNN e Árvore de Decisão treinados e otimizados.")
 
