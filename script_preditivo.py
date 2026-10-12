@@ -173,4 +173,80 @@ if len(colunas_numericas) >= 3:
 
 print("\nFase 3 concluída com sucesso: Variáveis sintéticas adicionadas ao pipeline preditivo.")
 
+# ==============================================================================
+# FASE 4: DIVISÃO DO DATASET, ESTRATIFICAÇÃO, BALANCEAMENTO E O USO DO .fit()
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 4: PREPARAÇÃO DOS DADOS PARA MODELAGEM ---")
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from imblearn.over_sampling import SMOTE
+
+# ------------------------------------------------------------------------------
+# 1. Separação entre Variáveis Explicativas (X) e Variável Alvo (y)
+# ------------------------------------------------------------------------------
+# Assume-se que a última coluna do DataFrame seja a variável alvo (rótulo de falha)
+# e todas as demais colunas anteriores sejam as features preditoras dos sensores.
+coluna_alvo = df.columns[-1]
+X = df.drop(columns=[coluna_alvo])
+y = df[coluna_alvo]
+
+print(f"Variável Alvo definida: '{coluna_alvo}'")
+print(f"Total de features preditoras (X): {X.shape[1]}")
+
+# ------------------------------------------------------------------------------
+# 2. Divisão Estratificada em Conjuntos de Treino e Teste (Train-Test Split)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: A estratificação (stratify=y) garante que a proporção 
+# de classes (normal vs falha) seja idêntica tanto no conjunto de treino quanto no 
+# de teste, prevenindo desvios em cenários de dados desbalanceados.
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, 
+    test_size=0.30, 
+    random_state=42, 
+    stratify=y
+)
+
+print(f"Dimensões do conjunto de treino (X_train): {X_train.shape}")
+print(f"Dimensões do conjunto de teste (X_test): {X_test.shape}")
+
+# ------------------------------------------------------------------------------
+# 3. APLICAÇÃO RIGOROSA DO MÉTODO .fit() E PREVENÇÃO DE DATA LEAKAGE
+# ------------------------------------------------------------------------------
+# EXPLICAÇÃO TÉCNICA OBRIGATÓRIA SOBRE O .fit():
+# O método .fit() calcula os parâmetros estatísticos do transformador ou modelo 
+# (como média e desvio padrão para padronização, ou regras de fronteira).
+# 
+# REGRA DE OURO CONTRA DATA LEAKAGE (Vazamento de Dados):
+# - O .fit() DEVE ser executado EXCLUSIVAMENTE sobre o conjunto de treino (X_train).
+# - No conjunto de teste (X_test), aplicamos estritamente o .transform().
+# 
+# Por que isso é vital? Se aplicarmos o .fit() no dataset inteiro antes da divisão, 
+# o modelo absorve estatísticas globais (incluindo o teste), gerando métricas de 
+# desempenho falsamente infladas que falharão em ambiente de produção industrial.
+
+# Instanciação do escalonador de dados
+scaler = StandardScaler()
+
+# Aplicação do .fit_transform() SOMENTE no conjunto de treino
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Aplicação APENAS do .transform() no conjunto de teste (respeitando a blindagem)
+X_test_scaled = scaler.transform(X_test)
+
+print("Escalonamento (StandardScaler) aplicado com sucesso, respeitando a blindagem do .fit() no treino.")
+
+# ------------------------------------------------------------------------------
+# 4. Tratamento de Desbalanceamento de Classes com SMOTE (Synthetic Minority Over-sampling)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: Em manutenção preditiva, falhas reais são eventos raros, 
+# gerando forte desbalanceamento no dataset. O SMOTE gera amostras sintéticas 
+# da classe minoritária estritamente no conjunto de treino (X_train_scaled) para 
+# evitar o vazamento de informações para os dados de teste.
+smote = SMOTE(random_state=42)
+X_train_balanced, y_train_balanced = smote.fit_resample(X_train_scaled, y_train)
+
+print(f"Balanceamento SMOTE concluído. Novas dimensões de treino balanceado: {X_train_balanced.shape}")
+
 
