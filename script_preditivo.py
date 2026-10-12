@@ -76,3 +76,62 @@ plt.savefig('heatmap_correlacao_pearson.png')
 plt.close()
 
 print("\nFase 1 concluída: Dimensões, métricas descritivas e gráficos analíticos gerados e salvos com sucesso.")
+
+
+# ==============================================================================
+# FASE 2: LIMPEZA E TRATAMENTO DE DADOS (DATA PREP)
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 2: LIMPEZA E TRATAMENTO DE DADOS ---")
+
+# ------------------------------------------------------------------------------
+# 1. Tratamento de Registros Duplicados
+# ------------------------------------------------------------------------------
+# Justificativa técnica: Registros duplicados inserem viés de sobre-representação 
+# no modelo preditivo, inflando artificialmente a acurácia. A remoção preserva 
+# a independência estatística das observações.
+total_duplicados_antes = df.duplicated().sum()
+df = df.drop_duplicates()
+print(f"Registros duplicados identificados e removidos: {total_duplicados_antes}")
+
+# ------------------------------------------------------------------------------
+# 2. Tratamento de Valores Ausentes (Missing Values / NaN)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: Modelos de Machine Learning (como KNN e Árvores de Decisão) 
+# não processam valores nulos nativamente. Optou-se pela substituição utilizando a 
+# MEDIANA para colunas numéricas, pois, diferentemente da média, a mediana é uma 
+# medida robusta que não sofre distorções severas na presença de valores discrepantes (outliers).
+colunas_com_nulos = df.columns[df.isnull().any()]
+
+if len(colunas_com_nulos) > 0:
+    for coluna in colunas_com_nulos:
+        if pd.api.types.is_numeric_dtype(df[coluna]):
+            mediana_calculada = df[coluna].median()
+            df[coluna] = df[coluna].fillna(mediana_calculada)
+            print(f"Coluna numérica '{coluna}': valores nulos preenchidos com a mediana ({mediana_calculada})")
+        else:
+            moda_calculada = df[coluna].mode()[0]
+            df[coluna] = df[coluna].fillna(moda_calculada)
+            print(f"Coluna categórica '{coluna}': valores nulos preenchidos com a moda ({moda_calculada})")
+else:
+    print("Nenhum valor ausente (NaN) detectado no dataset.")
+
+# ------------------------------------------------------------------------------
+# 3. Análise e Visualização de Outliers (Boxplot)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: Valores extremos (outliers) podem desestabilizar o cálculo 
+# de distâncias euclidianas no algoritmo KNN. Geramos o gráfico Boxplot para 
+# inspeção visual da dispersão e identificação de assimetrias severas.
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df.select_dtypes(include=[np.number]), palette="Set3")
+plt.title('Fase 2 - Identificação de Outliers nas Variáveis Numéricas (Boxplot)')
+plt.xlabel('Variáveis do Processo')
+plt.ylabel('Valores / Escala')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('boxplot_analise_outliers.png')
+plt.close()
+
+print("\nFase 2 concluída com sucesso: Dados limpos, duplicatas removidas, nulos tratados por robustez estatística e boxplots gerados.")
+
+
