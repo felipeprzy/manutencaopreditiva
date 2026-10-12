@@ -135,3 +135,42 @@ plt.close()
 print("\nFase 2 concluída com sucesso: Dados limpos, duplicatas removidas, nulos tratados por robustez estatística e boxplots gerados.")
 
 
+# ==============================================================================
+# FASE 3: FEATURE ENGINEERING (ENGENHARIA DE RECURSOS)
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 3: ENGENHARIA DE RECURSOS ---")
+
+# Justificativa técnica: A engenharia de recursos consiste na transformação e criação 
+# de novas variáveis preditoras a partir dos dados brutos existentes. O objetivo é 
+# fornecer interações físicas e estatísticas mais evidentes para os algoritmos de 
+# Machine Learning, potencializando a capacidade de detecção precoce de falhas.
+
+# Seleção automática das colunas numéricas disponíveis no dataset limpo
+colunas_numericas = df.select_dtypes(include=[np.number]).columns
+
+if len(colunas_numericas) >= 2:
+    # ------------------------------------------------------------------------------
+    # 1. Criação de Feature por Interação Multiplicativa (Proxy de Esforço Operacional)
+    # ------------------------------------------------------------------------------
+    # Lógica matemática: Multiplicar duas variáveis de sensores interdependentes 
+    # (ex: torque e rotação, ou pressão e temperatura) gera um indicador composto 
+    # que reflete o estresse mecânico ou térmico acumulado no componente industrial.
+    col1, col2 = colunas_numericas[0], colunas_numericas[1]
+    df['feature_esforco_combinado'] = df[col1] * df[col2]
+    print(f"Feature criada com sucesso: 'feature_esforco_combinado' (Produto entre '{col1}' e '{col2}').")
+
+if len(colunas_numericas) >= 3:
+    # ------------------------------------------------------------------------------
+    # 2. Criação de Feature por Razão / Quociente (Taxa de Eficiência Operacional)
+    # ------------------------------------------------------------------------------
+    # Lógica matemática: A divisão entre variáveis correlacionadas normaliza a 
+    # escala de operação. Adiciona-se uma constante infinitesimal (1e-5) no denominador 
+    # para prevenir erros de divisão por zero (ArithmeticError) em leituras nulas de sensores.
+    col3 = colunas_numericas[2]
+    df['feature_taxa_operacional'] = df[col1] / (df[col3].abs() + 1e-5)
+    print(f"Feature criada com sucesso: 'feature_taxa_operacional' (Razão entre '{col1}' e '{col3}').")
+
+print("\nFase 3 concluída com sucesso: Variáveis sintéticas adicionadas ao pipeline preditivo.")
+
+
