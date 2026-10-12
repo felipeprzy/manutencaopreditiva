@@ -63,3 +63,28 @@ print(confusion_matrix(y_test, y_pred))
 
 print("\nFase 2 concluída: Modelo treinado e avaliado com sucesso.")
 
+
+
+# ==============================================================================
+# FASE 3: ANÁLISE DE IMPORTÂNCIA DAS VARIÁVEIS (FEATURE IMPORTANCE)
+# ==============================================================================
+
+print("\n--- Iniciando Fase 3: Cálculo da Importância das Features ---")
+
+# Comentário Técnico: Extração dos scores de importância calculados pelas árvores do Random Forest.
+# Permite identificar quais sensores ou parâmetros operacionais mais influenciam o risco de falha.
+importancias = modelo_rf.feature_importances_
+nomes_features = X.columns
+
+# Comentário Técnico: Organização dos dados em um DataFrame para facilitar a visualização e ordenação.
+df_importancia = pd.DataFrame({
+    'Variavel': nomes_features,
+    'Importancia': importancias
+}).sort_values(by='Importancia', ascending=False)
+
+print("Ranking de Impacto das Variáveis na Manutenção Preditiva:")
+print(df_importancia.to_string(index=False))
+
+print("\nFase 3 concluída com sucesso: Importância das features mapeada.")
+
+
