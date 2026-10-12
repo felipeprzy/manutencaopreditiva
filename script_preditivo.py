@@ -138,3 +138,26 @@ print("Gráficos analíticos gerados e salvos com sucesso ('matriz_confusao.png'
 print("\nFase 4 concluída: Validação estatística e visualizações integradas ao pipeline.")
 
 
+# ==============================================================================
+# FASE 5: PERSISTÊNCIA E SALVAMENTO DO MODELO PREDITIVO
+# ==============================================================================
+
+import joblib
+
+print("\n--- Iniciando Fase 5: Salvamento do Modelo e Normalizador ---")
+
+# Comentário Técnico: Definição dos nomes dos arquivos binários de saída para o modelo e o scaler.
+arquivo_modelo = "modelo_manutencao_rf.pkl"
+arquivo_scaler = "scaler_preditivo.pkl"
+
+# Comentário Técnico: Serialização e exportação do classificador Random Forest treinado.
+joblib.dump(modelo_rf, arquivo_modelo)
+
+# Comentário Técnico: Serialização e exportação do objeto StandardScaler para manter a mesma escala em inferências futuras.
+joblib.dump(scaler, arquivo_scaler)
+
+print(f"Modelo salvo com sucesso em: {arquivo_modelo}")
+print(f"Normalizador salvo com sucesso em: {arquivo_scaler}")
+print("\nPipeline de Manutenção Preditiva concluído, validado e persistido com sucesso!")
+
+
