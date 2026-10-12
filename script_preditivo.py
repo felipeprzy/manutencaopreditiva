@@ -405,4 +405,48 @@ plt.close()
 
 print("\nFase 6 concluída com sucesso: Métricas calculadas e gráficos de desempenho gerados.")
 
+# ==============================================================================
+# FASE 7: RELATÓRIO DE CONSISTÊNCIA E EXPORTAÇÃO DE RESULTADOS
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 7: CONSOLIDAÇÃO E EXPORTAÇÃO DOS RESULTADOS ---")
+
+# ------------------------------------------------------------------------------
+# 1. Consolidação das Métricas Finais em Estrutura Tabular
+# ------------------------------------------------------------------------------
+# Justificativa técnica: A estruturação final dos resultados em formato tabular 
+# facilita a auditoria técnica e a leitura automatizada por relatórios gerenciais 
+# e acadêmicos.
+
+resumo_desempenho = {
+    'Modelo': ['K-Nearest Neighbors (KNN)', 'Árvore de Decisão'],
+    'ROC-AUC Score': [auc_knn, auc_dt]
+}
+
+df_resultados = pd.DataFrame(resumo_desempenho)
+
+# Exibição do resumo executivo no console
+print("\n--- RESUMO EXECUTIVO DO DESEMPENHO DOS MODELOS ---")
+print(df_resultados.to_string(index=False))
+
+# ------------------------------------------------------------------------------
+# 2. Exportação dos Resultados e Previsões para Arquivo CSV
+# ------------------------------------------------------------------------------
+# Justificativa técnica: A persistência dos resultados no sistema de arquivos 
+# do repositório garante a reprodutibilidade e o acesso imediato aos dados gerados 
+# pelas premissas de teste para posterior documentação no README.md.
+
+df_teste_resultado = X_test.copy()
+df_teste_resultado['Real'] = y_test.values
+df_teste_resultado['Predito_KNN'] = y_pred_knn
+df_teste_resultado['Predito_DecisionTree'] = y_pred_dt
+
+# Salvando a base de resultados preditivos
+arquivo_saida = 'resultados_preditivos_finais.csv'
+df_teste_resultado.to_csv(arquivo_saida, index=False)
+
+print(f"\nResultados preditivos consolidados e exportados com sucesso para: '{arquivo_saida}'")
+print("\n================================================================================")
+print(" PIPELINE PREDITIVO INDUSTRIAL EXECUTADO DE PONTA A PONTA COM SUCESSO!")
+print("================================================================================")
 
