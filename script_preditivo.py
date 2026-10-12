@@ -323,3 +323,86 @@ melhor_dt = grid_dt.best_estimator_
 print(f"Melhores parâmetros encontrados para a Árvore de Decisão: {grid_dt.best_params_}")
 print("\nFase 5 concluída com sucesso: Modelos KNN e Árvore de Decisão treinados e otimizados.")
 
+# ==============================================================================
+# FASE 6: AVALIAÇÃO DE DESEMPENHO E MÉTRICAS PREDITIVAS
+# ==============================================================================
+
+print("\n--- INICIANDO FASE 6: AVALIAÇÃO DE DESEMPENHO DOS MODELOS ---")
+
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve
+
+# ------------------------------------------------------------------------------
+# 1. Geração de Previsões no Conjunto de Teste (Blindado)
+# ------------------------------------------------------------------------------
+# Justificativa técnica: A avaliação de desempenho DEVE ser realizada estritamente 
+# sobre o conjunto de teste não visto (X_test_scaled), simulando o comportamento 
+# real do sistema preditivo em ambiente de produção industrial.
+
+# Previsões para o KNN
+y_pred_knn = melhor_knn.predict(X_test_scaled)
+y_prob_knn = melhor_knn.predict_proba(X_test_scaled)[:, 1]
+
+# Previsões para a Árvore de Decisão
+y_pred_dt = melhor_dt.predict(X_test_scaled)
+y_prob_dt = melhor_dt.predict_proba(X_test_scaled)[:, 1]
+
+print("\n--- RELATÓRIO DE CLASSIFICAÇÃO: KNN ---")
+print(classification_report(y_test, y_pred_knn))
+
+print("\n--- RELATÓRIO DE CLASSIFICAÇÃO: ÁRVORE DE DECISÃO ---")
+print(classification_report(y_test, y_pred_dt))
+
+# ------------------------------------------------------------------------------
+# 2. Cálculo das Métricas de ROC-AUC
+# ------------------------------------------------------------------------------
+# Lógica matemática: A métrica ROC-AUC (Area Under the Receiver Operating Characteristic) 
+# avalia a capacidade do modelo de discriminar entre as classes (normal vs falha) 
+# independentemente do limiar de decisão adotado.
+auc_knn = roc_auc_score(y_test, y_prob_knn)
+auc_dt = roc_auc_score(y_test, y_prob_dt)
+
+print(f"ROC-AUC Score (KNN): {auc_knn:.4f}")
+print(f"ROC-AUC Score (Árvore de Decisão): {auc_dt:.4f}")
+
+# ------------------------------------------------------------------------------
+# 3. Geração e Salvamento dos Gráficos de Avaliação (Matriz de Confusão e Curva ROC)
+# ------------------------------------------------------------------------------
+
+# Gráfico 1: Matrizes de Confusão Comparativas
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+sns.heatmap(confusion_matrix(y_test, y_pred_knn), annot=True, fmt='d', cmap='Blues', ax=axes[0])
+axes[0].set_title('Matriz de Confusão - KNN')
+axes[0].set_xlabel('Previsto')
+axes[0].set_ylabel('Real')
+
+sns.heatmap(confusion_matrix(y_test, y_pred_dt), annot=True, fmt='d', cmap='Greens', ax=axes[1])
+axes[1].set_title('Matriz de Confusão - Árvore de Decisão')
+axes[1].set_xlabel('Previsto')
+axes[1].set_ylabel('Real')
+
+plt.tight_layout()
+plt.savefig('matrizes_confusao.png')
+plt.close()
+
+# Gráfico 2: Curvas ROC Comparativas
+plt.figure(figsize=(8, 6))
+
+fpr_knn, tpr_knn, _ = roc_curve(y_test, y_prob_knn)
+plt.plot(fpr_knn, tpr_knn, label=f'KNN (AUC = {auc_knn:.2f})', color='blue', lw=2)
+
+fpr_dt, tpr_dt, _ = roc_curve(y_test, y_prob_dt)
+plt.plot(fpr_dt, tpr_dt, label=f'Árvore de Decisão (AUC = {auc_dt:.2f})', color='green', lw=2)
+
+plt.plot([0, 1], [0, 1], 'k--', lw=1.5, label='Classificador Aleatório')
+plt.title('Fase 6 - Curvas ROC Comparativas')
+plt.xlabel('Taxa de Falsos Positivos (FPR)')
+plt.ylabel('Taxa de Verdadeiros Positivos (TPR)')
+plt.legend(loc='lower right')
+plt.grid(True)
+plt.savefig('curva_roc_comparativa.png')
+plt.close()
+
+print("\nFase 6 concluída com sucesso: Métricas calculadas e gráficos de desempenho gerados.")
+
+
