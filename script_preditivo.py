@@ -66,3 +66,27 @@ plt.tight_layout()
 plt.show()
 
 
+from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
+import numpy as np
+
+# Selecionar apenas as colunas preditoras numéricas e excluir o target
+num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+if 'falha_maquina' in num_cols:
+    num_cols.remove('falha_maquina')
+
+X = df[num_cols]
+y = df['falha_maquina']
+
+# Divisão 80/20 com estratificação proporcional
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# SMOTE aplicado exclusivamente nos dados de treino para evitar Data Leakage
+smote = SMOTE(random_state=42)
+X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
+
+print(f"X_train pós-SMOTE: {X_train_res.shape}")
+print(f"Distribuição do Target no Treino:\n{y_train_res.value_counts()}")
+
