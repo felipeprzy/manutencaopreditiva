@@ -64,3 +64,5 @@ plt.title("Análise de Outliers - Boxplot", fontsize=14, fontweight='bold')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
+
+
