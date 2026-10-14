@@ -1,39 +1,40 @@
+# Projeto Avaliativo Módulo 1: Pipeline Preditivo para Manutenção na Indústria 4.0
 
-
-Repositório oficial desenvolvido para a implementação de um pipeline de **Manutenção Preditiva** baseado em Machine Learning, prevenção de *Data Leakage*, validação cruzada e interpretabilidade de modelos.
-
-Estrutura do Repositório
-
-O projeto está centralizado no script principal `script_preditivo.py`, que executa de forma modular as seguintes etapas:
-
-Fase 1 (EDA):** Análise Exploratória de Dados, verificação de dimensões, tipos de dados, resumo estatístico e geração dos gráficos analíticos (Histograma, Desbalanceamento e Correlação de Pearson).
-
-Fase 2 (Data Prep):** Limpeza de registros duplicados, tratamento de valores ausentes (NaN) utilizando a mediana para robustez contra outliers, e geração de diagramas Boxplot.
-
-Fase 3 (Feature Engineering):** Criação de novas variáveis preditivas (interações e razões matemáticas) para potencializar a detecção de anomalias operacionais.
-
-Fase 4 (Divisão e Blindagem):** Separação estratificada (Train-Test Split), escalonamento com `StandardScaler` (aplicando o `.fit()` **estritamente** no conjunto de treino para evitar *Data Leakage*) e balanceamento de classes via **SMOTE**.
-
-Fase 5 (Modelagem):** Treinamento, otimização de hiperparâmetros via `GridSearchCV` e validação cruzada para os algoritmos **K-Nearest Neighbors (KNN)** e **Árvore de Decisão**.
-
-Fase 6 (Avaliação):** Emissão de relatórios de classificação, cálculo de métricas ROC-AUC e geração das Matrizes de Confusão e Curvas ROC comparativas.
-
-Fase 7 (Consolidação):** Exportação dos resultados preditivos consolidados para arquivos de auditoria em formato CSV.
-
- Tecnologias e Bibliotecas Utilizadas
-
-O script foi desenvolvido em **Python** utilizando o seguinte ecossistema de Data Science:
-* `pandas` e `numpy` (Manipulação e computação numérica)
-* `matplotlib` e `seaborn` (Visualização de dados e gráficos analíticos)
-* `scikit-learn` (Pré-processamento, métricas, KNN, Árvore de Decisão e GridSearchCV)
-* `imblearn` (Técnica de reamostragem SMOTE para dados desbalanceados)
+## 📝 Descrição do Projeto
+Repositório oficial desenvolvido para a implementação de um pipeline de **Manutenção Preditiva** baseado em Machine Learning, com foco na previsão de quebras mecânicas em equipamentos industriais, prevenção de *Data Leakage*, tratamento estatístico de dados e interpretabilidade de modelos classificadores.
 
 ---
 
- Instruções de Execução
+## 📂 Estrutura do Repositório
+O projeto está centralizado no Notebook principal **`projeto_avaliativo_modulo_1.ipynb`**, que executa de forma estruturada as seguintes etapas:
 
-1. Certifique-se de que o dataset institucional em formato `.csv` está devidamente posicionado no diretório do projeto.
-2. Atualize o caminho de leitura do arquivo no início do script `script_preditivo.py`, caso necessário.
-3. Execute o script completo via terminal:
-   ```bash
-   python script_preditivo.py
+- **Fase 1 (EDA):** Análise Exploratória de Dados, verificação de dimensões, tipos de dados, resumo estatístico descritivo e geração dos gráficos analíticos (Histograma, Desbalanceamento do Target e Correlação de Pearson).
+- **Fase 2 (Data Prep):** Limpeza de registros duplicados, tratamento de valores ausentes (NaN) com justificativa técnica baseada em média/mediana, e geração de diagramas Boxplot para análise de outliers.
+- **Fase 3 (Feature Engineering):** Criação de nova variável numérica preditiva (`potencia` através da multiplicação de rotação por torque) para potencializar a detecção de anomalias operacionais.
+- **Fase 4 (Divisão e Balanceamento):** Separação estratificada (Train-Test Split 80/20 com `stratify=y`) e aplicação da técnica SMOTE **exclusivamente no conjunto de treino** para evitar *Data Leakage*.
+- **Fase 5 (Escalonamento):** Aplicação de `StandardScaler` apenas nos dados destinados ao modelo KNN (`fit_transform` no treino e `transform` no teste), mantendo a Árvore de Decisão sem escalonamento devido à sua imunidade a escalas.
+- **Fase 6 (Ajuste de Parâmetros e Overfitting):** Treinamento e variação de hiperparâmetros ($K \in \{3, 5, 7\}$ para o KNN e `max_depth` $\in \{3, 5, \text{None}\}$ para a Árvore), registrando e avaliando a estabilidade entre treino e teste.
+- **Fase 7 (Veredito Final):** Cálculo da acurácia final em conjunto de teste independente e emissão da conclusão técnica comparativa indicando o modelo ideal para adoção fabril.
+
+---
+
+## 🛠️ Tecnologias e Bibliotecas Utilizadas
+O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Data Science:
+
+- `pandas` e `numpy` (Manipulação e computação numérica)
+- `matplotlib` e `seaborn` (Visualização de dados e gráficos analíticos)
+- `scikit-learn` (Pré-processamento, StandardScaler, KNN, Árvore de Decisão e métricas de acurácia)
+- `imbalanced-learn` (Técnica de reamostragem SMOTE para dados desbalanceados)
+
+---
+
+## 🚀 Instruções de Execução
+
+1. **Baixe o Notebook:** Obtenha o arquivo `projeto_avaliativo_modulo_1.ipynb`.
+2. **Ambiente de Execução:** Faça o upload do notebook e da base de dados **`manutencao_preditiva.csv`** para o ambiente do **Google Colab**.
+3. **Execução:** Execute todas as células em ordem sequencial para rodar o pipeline ponta a ponta.
+
+---
+
+## 🎥 Vídeo de Apresentação
+- **Link do Vídeo:** [Inserir link do Google Drive em modo leitor para qualquer pessoa com o link]
