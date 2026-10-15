@@ -1,11 +1,11 @@
 # Projeto Avaliativo Módulo 1: Pipeline Preditivo para Manutenção na Indústria 4.0
 
-## 📝 Descrição do Projeto
+##  Descrição do Projeto
 Repositório oficial desenvolvido para a implementação de um pipeline de **Manutenção Preditiva** baseado em Machine Learning, com foco na previsão de quebras mecânicas em equipamentos industriais, prevenção de *Data Leakage*, tratamento estatístico de dados e interpretabilidade de modelos classificadores.
 
 ---
 
-## 📂 Estrutura do Repositório
+##  Estrutura do Repositório
 O projeto está centralizado no Notebook principal **`projeto_avaliativo_modulo_1.ipynb`**, que executa de forma estruturada as seguintes etapas:
 
 - **Fase 1 (EDA):** Análise Exploratória de Dados, verificação de dimensões, tipos de dados, resumo estatístico descritivo e geração dos gráficos analíticos (Histograma, Desbalanceamento do Target e Correlação de Pearson).
@@ -18,7 +18,7 @@ O projeto está centralizado no Notebook principal **`projeto_avaliativo_modulo_
 
 ---
 
-## 🛠️ Tecnologias e Bibliotecas Utilizadas
+##  Tecnologias e Bibliotecas Utilizadas
 O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Data Science:
 
 - `pandas` e `numpy` (Manipulação e computação numérica)
@@ -28,7 +28,7 @@ O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Da
 
 ---
 
-## 🚀 Instruções de Execução
+##  Instruções de Execução
 
 1. **Baixe o Notebook:** Obtenha o arquivo `projeto_avaliativo_modulo_1.ipynb`.
    https://colab.research.google.com/drive/1en5nR0K_E0hKttjsFSMxzrGXaqKlXWOv
@@ -37,6 +37,6 @@ O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Da
 
 ---
 
-## 🎥 Vídeo de Apresentação
+##  Vídeo de Apresentação
 
 https://drive.google.com/file/d/1s2Cf7Fkj6aFiqy6JKou8juSXsWzuA-gu/view?usp=drivesdk
