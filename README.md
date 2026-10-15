@@ -38,4 +38,5 @@ O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Da
 ---
 
 ## 🎥 Vídeo de Apresentação
-- **Link do Vídeo:** [Inserir link do Google Drive em modo leitor para qualquer pessoa com o link]
+
+https://drive.google.com/file/d/1s2Cf7Fkj6aFiqy6JKou8juSXsWzuA-gu/view?usp=drivesdk
