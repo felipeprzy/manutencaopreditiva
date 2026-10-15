@@ -31,8 +31,9 @@ O projeto foi desenvolvido em **Python** utilizando o seguinte ecossistema de Da
 ## 🚀 Instruções de Execução
 
 1. **Baixe o Notebook:** Obtenha o arquivo `projeto_avaliativo_modulo_1.ipynb`.
-2. **Ambiente de Execução:** Faça o upload do notebook e da base de dados **`manutencao_preditiva.csv`** para o ambiente do **Google Colab**.
-3. **Execução:** Execute todas as células em ordem sequencial para rodar o pipeline ponta a ponta.
+   https://colab.research.google.com/drive/1en5nR0K_E0hKttjsFSMxzrGXaqKlXWOv
+3. **Ambiente de Execução:** Faça o upload do notebook e da base de dados **`manutencao_preditiva.csv`** para o ambiente do **Google Colab**.
+4. **Execução:** Execute todas as células em ordem sequencial para rodar o pipeline ponta a ponta.
 
 ---
 
